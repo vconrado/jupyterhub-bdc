@@ -1,4 +1,4 @@
-version: '3'
+version: '3.2'
 
 services:
   jupyterhub:
@@ -6,13 +6,24 @@ services:
     image: jupyterhub_img
     container_name: jupyterhub
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - jupyterhub_data:/srv/jupyterhub
+      - type: bind
+        source: /var/run/docker.sock
+        target: /var/run/docker.sock
+      - type: volume
+        source: jupyterhub_data
+        target: "/srv/jupyterhub"
+      - type: bind
+        source: "/data"
+        target: "/data"
+        read_only: true
     environment:
+      - DOCKER_NOTEBOOK_DIR=${DOCKER_NOTEBOOK_DIR}
       - DOCKER_JUPYTER_CONTAINER=jupyterlab_img
       - DOCKER_NETWORK_NAME=${COMPOSE_PROJECT_NAME}_default
       - HUB_IP=jupyterhub
       - HOST
+    env_file:
+      - .env
     ports:
       - "8000:8000"
     restart: on-failure
@@ -20,7 +31,7 @@ services:
   jupyterlab:
     build: jupyterlab
     image: jupyterlab_img
-    container_name: jupyterlab-throaway
+    container_name: jupyterlab-build
     network_mode: none
     command: echo
 

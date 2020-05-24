@@ -1,4 +1,6 @@
 # JupyterHub configuration
+# based on: https://github.com/defeo/jupyterhub-docker
+#           https://github.com/jupyterhub/jupyterhub-deploy-docker
 import os
 
 ## Authenticator
@@ -22,11 +24,13 @@ c.JupyterHub.hub_ip = os.environ['HUB_IP']
 ## see https://github.com/jupyterhub/dockerspawner#data-persistence-and-dockerspawner
 notebook_dir = os.environ.get('DOCKER_NOTEBOOK_DIR') or '/home/jovyan'
 c.DockerSpawner.notebook_dir = notebook_dir
-c.DockerSpawner.volumes = { 'jupyterhub-user-{username}': notebook_dir }
+## ToDo: Define persistence per user
+# c.DockerSpawner.volumes = { "jupyterhub-user-{username}": notebook_dir }
+c.DockerSpawner.volumes = { "/data": {"bind": '/home/jovyan/work/shared', "mode": "ro"} }
 
 # Server usage
 c.Spawner.cpu_limit = 1
-c.Spawner.mem_limit = '4G'
+c.Spawner.mem_limit = '2G'
 
 ## Services
 c.JupyterHub.services = [
