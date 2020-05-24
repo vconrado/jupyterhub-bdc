@@ -1,0 +1,40 @@
+version: "3.7"
+
+services:
+  jupyterhub:
+    container_name: bdc-jupyterhub
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: jupyterhub/Dockerfile
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      DOCKER_NETWORK_NAME: ${DOCKER_NETWORK_NAME}
+      DOCKER_NOTEBOOK_IMAGE: ${LOCAL_NOTEBOOK_IMAGE}
+    ports:
+      - "8000:8000"
+    command: >
+      jupyterhub -f /srv/jupyterhub/jupyterhub_config.py
+
+networks:
+  default:
+    external:
+      name: ${DOCKER_NETWORK_NAME}
+
+  # # Configuration for the single-user servers
+  # jupyterlab:
+  #   image: jupyter/scipy-notebook:c76996e26e48
+  #   network_mode: none
+  #   command: echo
+    # build: 
+    #   context: .
+    #   dockerfile: jupyterlab/Dockerfile
+    # image: bdc-jupyterlab
+    # command: echo
+
+# volumes:
+#   ...
+
+# networks:
+#   ...
