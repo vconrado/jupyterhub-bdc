@@ -2,6 +2,7 @@
 FROM jupyter/datascience-notebook
 
 COPY env.R env.R
+COPY odc.sh odc.sh
 
 USER root
 RUN apt-get update && \
@@ -11,8 +12,13 @@ RUN apt-get update && \
     && apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
+RUN ./odc.sh
+
 USER $NB_UID
+COPY .datacube.conf .datacube.conf
+
 RUN conda install --yes \
+    'nb_conda' \
     'r-units' \
     'r-rgdal' \
     'r-sf'
