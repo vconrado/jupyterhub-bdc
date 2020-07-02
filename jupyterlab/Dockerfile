@@ -14,13 +14,20 @@ RUN apt-get update && \
 
 RUN ./odc.sh
 
-USER $NB_UID
 COPY .datacube.conf .datacube.conf
+RUN chown $NB_UID:users .datacube.conf
+
+RUN mkdir /gfs
+
+USER $NB_UID
 
 RUN conda install --yes \
-    'nb_conda' \
-    'r-units' \
-    'r-rgdal' \
-    'r-sf'
+    'nb_conda' 
 
-RUN Rscript env.R
+#RUN conda install --yes \
+#    'nb_conda' \
+#    'r-units' \
+#    'r-rgdal' \
+#    'r-sf'
+
+#RUN Rscript env.R

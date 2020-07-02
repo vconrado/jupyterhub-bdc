@@ -16,10 +16,14 @@ services:
         source: "/data"
         target: "/data"
         read_only: true
+      - type: bind
+        source: "/gfs"
+        target: "/gfs"
+        read_only: true
     environment:
       - DOCKER_NOTEBOOK_DIR=${DOCKER_NOTEBOOK_DIR}
       - DOCKER_JUPYTER_CONTAINER=jupyterlab_img
-      - DOCKER_NETWORK_NAME=${COMPOSE_PROJECT_NAME}_default
+      - DOCKER_NETWORK_NAME=jupyterhub_bdc-jupyter-net
       - HUB_IP=jupyterhub
       - HOST
     env_file:
@@ -27,13 +31,25 @@ services:
     ports:
       - "8000:8000"
     restart: on-failure
+    networks:
+        - bdc-jupyter-net
 
   jupyterlab:
     build: jupyterlab
     image: jupyterlab_img
     container_name: jupyterlab-build
-    network_mode: none
+    networks:
+        - bdc-jupyter-net
     command: echo
+    volumes:
+      - type: bind
+        source: "/gfs"
+        target: "/gfs"
+        read_only: true
+    
 
 volumes:
   jupyterhub_data:
+  
+networks:
+    bdc-jupyter-net:
