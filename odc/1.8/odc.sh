@@ -6,10 +6,13 @@ source activate odc
 
 mkdir ~/Devel && cd ~/Devel && git clone https://github.com/opendatacube/datacube-core.git
 
-conda install -y gdal geopandas matplotlib ipyleaflet
-jupyter nbextension enable --py --sys-prefix ipyleaflet
-
 cd datacube-core
 pip install --upgrade -e .
 
 pre-commit install
+
+conda install --yes gdal geopandas matplotlib ipyleaflet
+
+jupyter labextension install @jupyter-widgets/jupyterlab-manager
+jupyter labextension install jupyter-leaflet
+

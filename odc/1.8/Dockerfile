@@ -1,8 +1,4 @@
-# FROM jupyter/scipy-notebook:137a295ff71b
 FROM jupyter/datascience-notebook
-
-COPY env.R env.R
-COPY odc.sh odc.sh
 
 USER root
 RUN apt-get update && \
@@ -11,6 +7,8 @@ RUN apt-get update && \
     libudunits2-dev \
     && apt-get clean && \
     rm -rf /var/lib/apt/lists/*
+
+COPY odc.sh odc.sh
 
 RUN ./odc.sh
 
@@ -21,13 +19,4 @@ RUN mkdir /gfs
 
 USER $NB_UID
 
-RUN conda install --yes \
-    'nb_conda' 
-
-#RUN conda install --yes \
-#    'nb_conda' \
-#    'r-units' \
-#    'r-rgdal' \
-#    'r-sf'
-
-#RUN Rscript env.R
+RUN conda install --yes nb_conda
