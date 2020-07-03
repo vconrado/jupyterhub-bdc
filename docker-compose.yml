@@ -2,8 +2,8 @@ version: '3.2'
 
 services:
   jupyterhub:
-    build: jupyterhub
-    image: jupyterhub_img
+    build: ./jupyterhub
+    image: jupyterhub:1.1
     container_name: jupyterhub
     volumes:
       - type: bind
@@ -34,10 +34,23 @@ services:
     networks:
         - bdc-jupyter-net
 
-  jupyterlab:
-    build: jupyterlab
-    image: jupyterlab_img
-    container_name: jupyterlab-build
+#  r-sits:
+#    build: ./r-sits
+#    image: r-sits:1.0
+#    container_name: jupyterlab_r-sits
+#    networks:
+#        - bdc-jupyter-net
+#    command: echo
+#    volumes:
+#      - type: bind
+#        source: "/gfs"
+#        target: "/gfs"
+#        read_only: true
+        
+  odc:
+    build: ./odc/1.8
+    image: odc:1.8
+    container_name: jupyterlab_odc-1.8
     networks:
         - bdc-jupyter-net
     command: echo
@@ -46,7 +59,6 @@ services:
         source: "/gfs"
         target: "/gfs"
         read_only: true
-    
 
 volumes:
   jupyterhub_data:
